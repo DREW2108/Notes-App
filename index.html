@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Notes</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- =====================================
+         FONDO
+    ====================================== -->
+
+    <div class="background">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+
+    <!-- =====================================
+         PANTALLA DE BIENVENIDA
+    ====================================== -->
+
+    <section class="welcome-screen" id="welcome-screen">
+
+        <div class="welcome-card glass">
+
+            <div class="logo">
+                ✦
+            </div>
+
+            <h1>Notes</h1>
+
+            <p class="welcome-text">
+                Organiza tus ideas, pensamientos y tareas
+                en un solo lugar.
+            </p>
+
+            <h2>¿Cómo quieres ver Notes?</h2>
+
+            <div class="theme-options">
+
+                <button class="theme-card" id="light-theme">
+
+                    <div class="theme-preview light-preview">
+
+                        <div class="preview-top"></div>
+
+                        <div class="preview-content">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </div>
+
+                    <div class="theme-info">
+
+                        <span class="theme-icon">
+                            ☀️
+                        </span>
+
+                        <div>
+                            <strong>Claro</strong>
+                            <small>Claro y limpio</small>
+                        </div>
+
+                    </div>
+
+                </button>
+
+
+                <button class="theme-card" id="dark-theme">
+
+                    <div class="theme-preview dark-preview">
+
+                        <div class="preview-top"></div>
+
+                        <div class="preview-content">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+
+                    </div>
+
+                    <div class="theme-info">
+
+                        <span class="theme-icon">
+                            🌙
+                        </span>
+
+                        <div>
+                            <strong>Oscuro</strong>
+                            <small>Suave para la vista</small>
+                        </div>
+
+                    </div>
+
+                </button>
+
+            </div>
+
+            <p class="saved-message">
+                Tu elección se guardará automáticamente.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================
+         APLICACIÓN
+    ====================================== -->
+
+    <main class="app hidden" id="app">
+
+
+        <!-- =================================
+             SIDEBAR
+        ================================== -->
+
+        <aside class="sidebar glass">
+
+            <div class="brand">
+
+                <div class="brand-icon">
+                    ✦
+                </div>
+
+                <div>
+
+                    <h1>Notes</h1>
+
+                    <span>
+                        Tu espacio personal
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <nav class="navigation">
+
+                <button
+                    class="nav-item active"
+                    data-section="all"
+                >
+
+                    <span>▦</span>
+
+                    <span>
+                        Todas las notas
+                    </span>
+
+                    <b id="notes-count">
+                        0
+                    </b>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-section="favorites"
+                >
+
+                    <span>★</span>
+
+                    <span>
+                        Favoritas
+                    </span>
+
+                    <b id="favorites-count">
+                        0
+                    </b>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-section="pinned"
+                >
+
+                    <span>⌖</span>
+
+                    <span>
+                        Fijadas
+                    </span>
+
+                    <b id="pinned-count">
+                        0
+                    </b>
+
+                </button>
+
+
+                <button
+                    class="nav-item"
+                    data-section="trash"
+                >
+
+                    <span>⌫</span>
+
+                    <span>
+                        Papelera
+                    </span>
+
+                    <b id="trash-count">
+                        0
+                    </b>
+
+                </button>
+
+            </nav>
+
+
+            <!-- ETIQUETAS -->
+
+            <div class="sidebar-section">
+
+                <div class="section-title">
+
+                    <span>
+                        Etiquetas
+                    </span>
+
+                    <button>
+                        +
+                    </button>
+
+                </div>
+
+
+                <div class="tags">
+
+                    <button class="tag">
+
+                        <span class="tag-dot purple"></span>
+
+                        Personal
+
+                    </button>
+
+
+                    <button class="tag">
+
+                        <span class="tag-dot blue"></span>
+
+                        Estudios
+
+                    </button>
+
+
+                    <button class="tag">
+
+                        <span class="tag-dot green"></span>
+
+                        Trabajo
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- PARTE INFERIOR -->
+
+            <div class="sidebar-bottom">
+
+                <button class="settings-button">
+
+                    ⚙️
+
+                    <span>
+                        Configuración
+                    </span>
+
+                </button>
+
+
+                <button
+                    class="change-theme"
+                    id="change-theme"
+                >
+
+                    🌙
+
+                    <span>
+                        Cambiar tema
+                    </span>
+
+                </button>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- =================================
+             CONTENIDO
+        ================================== -->
+
+        <section class="content">
+
+
+            <header class="topbar">
+
+                <div>
+
+                    <h2 id="section-title">
+                        Mis notas
+                    </h2>
+
+                    <p id="date-text">
+                        Todo lo que tienes en mente.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="new-note-button"
+                    id="new-note-button"
+                >
+
+                    <span>
+                        +
+                    </span>
+
+                    Nueva nota
+
+                </button>
+
+            </header>
+
+
+
+            <!-- BUSCADOR -->
+
+            <div class="search-container glass">
+
+                <span class="search-icon">
+                    ⌕
+                </span>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Buscar notas..."
+                >
+
+                <span class="shortcut">
+                    Ctrl K
+                </span>
+
+            </div>
+
+
+
+            <!-- NOTAS -->
+
+            <div
+                class="notes-grid"
+                id="notes-grid"
+            ></div>
+
+
+
+            <!-- ESTADO VACÍO -->
+
+            <div
+                class="empty-state"
+                id="empty-state"
+            >
+
+                <div class="empty-icon">
+                    ✦
+                </div>
+
+                <h3>
+                    Todavía no tienes notas
+                </h3>
+
+                <p>
+                    Crea tu primera nota y empieza
+                    a organizar tus ideas.
+                </p>
+
+                <button
+                    class="empty-button"
+                    id="empty-button"
+                >
+
+                    + Crear primera nota
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- =====================================
+         MODAL NUEVA NOTA
+    ====================================== -->
+
+    <div
+        class="modal-overlay hidden"
+        id="note-modal"
+    >
+
+        <div class="note-modal glass">
+
+            <div class="modal-header">
+
+                <h2 id="modal-title">
+                    Nueva nota
+                </h2>
+
+                <button
+                    class="close-modal"
+                    id="close-modal"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <input
+                type="text"
+                class="note-title-input"
+                id="note-title"
+                placeholder="Título de la nota..."
+                maxlength="100"
+            >
+
+
+            <textarea
+                class="note-content-input"
+                id="note-content"
+                placeholder="Escribe algo..."
+            ></textarea>
+
+
+            <div class="note-options">
+
+
+                <!-- COLORES -->
+
+                <div class="option-group">
+
+                    <label>
+                        Color
+                    </label>
+
+                    <div class="color-options">
+
+                        <button
+                            class="color-option color-lavender active"
+                            data-color="lavender"
+                        ></button>
+
+                        <button
+                            class="color-option color-blue"
+                            data-color="blue"
+                        ></button>
+
+                        <button
+                            class="color-option color-sage"
+                            data-color="sage"
+                        ></button>
+
+                        <button
+                            class="color-option color-beige"
+                            data-color="beige"
+                        ></button>
+
+                        <button
+                            class="color-option color-rose"
+                            data-color="rose"
+                        ></button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ETIQUETA -->
+
+                <div class="option-group">
+
+                    <label>
+                        Etiqueta
+                    </label>
+
+                    <select id="note-tag">
+
+                        <option value="">
+                            Sin etiqueta
+                        </option>
+
+                        <option value="Personal">
+                            Personal
+                        </option>
+
+                        <option value="Estudios">
+                            Estudios
+                        </option>
+
+                        <option value="Trabajo">
+                            Trabajo
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-actions">
+
+                <button
+                    class="cancel-button"
+                    id="cancel-note"
+                >
+                    Cancelar
+                </button>
+
+                <button
+                    class="save-note-button"
+                    id="save-note"
+                >
+                    Guardar nota
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =====================================
+         NOTA EXPANDIDA
+    ====================================== -->
+
+    <div
+        class="expanded-overlay hidden"
+        id="expanded-overlay"
+    >
+
+        <div
+            class="expanded-note glass"
+            id="expanded-note"
+        >
+
+            <div class="expanded-header">
+
+                <div class="expanded-actions">
+
+                    <button
+                        class="expanded-action"
+                        id="expanded-favorite"
+                        title="Favorita"
+                    >
+                        ☆
+                    </button>
+
+                    <button
+                        class="expanded-action"
+                        id="expanded-pin"
+                        title="Fijar"
+                    >
+                        ⌖
+                    </button>
+
+                </div>
+
+
+                <button
+                    class="expanded-close"
+                    id="expanded-close"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <input
+                type="text"
+                id="expanded-title"
+                class="expanded-title"
+                placeholder="Título..."
+            >
+
+
+            <textarea
+                id="expanded-content"
+                class="expanded-content"
+                placeholder="Escribe algo..."
+            ></textarea>
+
+
+            <div class="expanded-footer">
+
+                <div class="expanded-info">
+
+                    <span id="expanded-date">
+                        —
+                    </span>
+
+                    <span
+                        class="expanded-tag"
+                        id="expanded-tag"
+                    >
+                        Sin etiqueta
+                    </span>
+
+                </div>
+
+
+                <button
+                    class="expanded-save"
+                    id="expanded-save"
+                >
+                    Guardar
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
