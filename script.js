@@ -1,6 +1,11 @@
-/* =========================================
+/* =====================================================
+   NOTES — SCRIPT
+===================================================== */
+
+
+/* =====================================================
    ELEMENTOS
-========================================= */
+===================================================== */
 
 const welcomeScreen =
     document.getElementById("welcome-screen");
@@ -72,9 +77,9 @@ const dateText =
     document.getElementById("date-text");
 
 
-/* =========================================
-   NOTA EXPANDIDA
-========================================= */
+/* =====================================================
+   EDITOR EXPANDIDO
+===================================================== */
 
 const expandedOverlay =
     document.getElementById("expanded-overlay");
@@ -107,9 +112,9 @@ const expandedTag =
     document.getElementById("expanded-tag");
 
 
-/* =========================================
-   DATOS
-========================================= */
+/* =====================================================
+   ESTADO
+===================================================== */
 
 let notes =
     JSON.parse(
@@ -126,10 +131,12 @@ let selectedColor =
 let currentSection =
     "all";
 
+let sourceCard = null;
 
-/* =========================================
+
+/* =====================================================
    INICIO
-========================================= */
+===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
@@ -140,7 +147,6 @@ document.addEventListener(
                 "notes-theme"
             );
 
-
         if (savedTheme) {
 
             setTheme(savedTheme);
@@ -148,7 +154,6 @@ document.addEventListener(
             showApp();
 
         }
-
 
         updateDate();
 
@@ -158,9 +163,9 @@ document.addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    TEMA
-========================================= */
+===================================================== */
 
 function setTheme(theme) {
 
@@ -169,7 +174,6 @@ function setTheme(theme) {
             "data-theme",
             theme
         );
-
 
     localStorage.setItem(
         "notes-theme",
@@ -192,9 +196,9 @@ function showApp() {
 }
 
 
-/* =========================================
+/* =====================================================
    SELECCIÓN DE TEMA
-========================================= */
+===================================================== */
 
 lightThemeButton.addEventListener(
     "click",
@@ -230,7 +234,6 @@ changeThemeButton.addEventListener(
                     "data-theme"
                 );
 
-
         setTheme(
             currentTheme === "dark"
                 ? "light"
@@ -241,9 +244,9 @@ changeThemeButton.addEventListener(
 );
 
 
-/* =========================================
-   NUEVA NOTA
-========================================= */
+/* =====================================================
+   CREAR NOTA
+===================================================== */
 
 newNoteButton.addEventListener(
     "click",
@@ -265,9 +268,9 @@ emptyButton.addEventListener(
 );
 
 
-/* =========================================
-   MODAL NUEVA NOTA
-========================================= */
+/* =====================================================
+   MODAL
+===================================================== */
 
 function openNoteModal(note = null) {
 
@@ -275,30 +278,24 @@ function openNoteModal(note = null) {
         .classList
         .remove("hidden");
 
-
     if (note) {
 
         editingNoteId =
             note.id;
-
 
         document.getElementById(
             "modal-title"
         ).textContent =
             "Editar nota";
 
-
         noteTitle.value =
             note.title;
-
 
         noteContent.value =
             note.content;
 
-
         noteTag.value =
             note.tag || "";
-
 
         selectedColor =
             note.color || "lavender";
@@ -308,34 +305,31 @@ function openNoteModal(note = null) {
         editingNoteId =
             null;
 
-
         document.getElementById(
             "modal-title"
         ).textContent =
             "Nueva nota";
 
-
         noteTitle.value =
             "";
-
 
         noteContent.value =
             "";
 
-
         noteTag.value =
             "";
-
 
         selectedColor =
             "lavender";
 
     }
 
-
     updateColorSelection();
 
-    noteTitle.focus();
+    setTimeout(
+        () => noteTitle.focus(),
+        100
+    );
 
 }
 
@@ -381,9 +375,9 @@ noteModal.addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    COLORES
-========================================= */
+===================================================== */
 
 document
     .querySelectorAll(
@@ -425,9 +419,9 @@ function updateColorSelection() {
 }
 
 
-/* =========================================
-   GUARDAR NOTA
-========================================= */
+/* =====================================================
+   GUARDAR NOTA DESDE MODAL
+===================================================== */
 
 saveNoteButton.addEventListener(
     "click",
@@ -443,7 +437,6 @@ function saveNote() {
     const content =
         noteContent.value.trim();
 
-
     if (!title && !content) {
 
         noteTitle.focus();
@@ -457,11 +450,10 @@ function saveNote() {
 
         const note =
             notes.find(
-                note =>
-                    note.id ===
+                item =>
+                    item.id ===
                     editingNoteId
             );
-
 
         if (note) {
 
@@ -484,7 +476,7 @@ function saveNote() {
 
     } else {
 
-        const newNote = {
+        notes.unshift({
 
             id:
                 Date.now(),
@@ -516,12 +508,7 @@ function saveNote() {
             updatedAt:
                 new Date().toISOString()
 
-        };
-
-
-        notes.unshift(
-            newNote
-        );
+        });
 
     }
 
@@ -535,9 +522,9 @@ function saveNote() {
 }
 
 
-/* =========================================
+/* =====================================================
    LOCAL STORAGE
-========================================= */
+===================================================== */
 
 function saveNotes() {
 
@@ -549,9 +536,9 @@ function saveNotes() {
 }
 
 
-/* =========================================
-   ACTUALIZAR NOTAS
-========================================= */
+/* =====================================================
+   ACTUALIZAR
+===================================================== */
 
 function updateNotes() {
 
@@ -562,9 +549,9 @@ function updateNotes() {
 }
 
 
-/* =========================================
+/* =====================================================
    FILTRAR
-========================================= */
+===================================================== */
 
 function getVisibleNotes() {
 
@@ -656,10 +643,6 @@ function getVisibleNotes() {
     }
 
 
-    /*
-        Las fijadas aparecen primero
-    */
-
     visible.sort(
         (a, b) =>
             Number(b.pinned) -
@@ -672,9 +655,9 @@ function getVisibleNotes() {
 }
 
 
-/* =========================================
-   RENDERIZAR
-========================================= */
+/* =====================================================
+   RENDERIZAR NOTAS
+===================================================== */
 
 function renderNotes() {
 
@@ -721,6 +704,10 @@ function renderNotes() {
                 `note-card ${note.color}`;
 
 
+            card.dataset.noteId =
+                note.id;
+
+
             card.innerHTML = `
 
                 <div class="note-card-header">
@@ -734,7 +721,6 @@ function renderNotes() {
                         <button
                             class="note-action"
                             data-action="favorite"
-                            data-id="${note.id}"
                             title="Favorita"
                         >
                             ${note.favorite
@@ -742,11 +728,9 @@ function renderNotes() {
                                 : "☆"}
                         </button>
 
-
                         <button
                             class="note-action"
                             data-action="pin"
-                            data-id="${note.id}"
                             title="Fijar"
                         >
                             ${note.pinned
@@ -754,21 +738,17 @@ function renderNotes() {
                                 : "⌖"}
                         </button>
 
-
                         <button
                             class="note-action"
                             data-action="edit"
-                            data-id="${note.id}"
                             title="Editar"
                         >
                             ✎
                         </button>
 
-
                         <button
                             class="note-action"
                             data-action="trash"
-                            data-id="${note.id}"
                             title="Eliminar"
                         >
                             ×
@@ -807,23 +787,26 @@ function renderNotes() {
             `;
 
 
-            /*
-                Abrir nota
-            */
+            /* -----------------------------------------
+               ABRIR NOTA
+            ----------------------------------------- */
 
             card.addEventListener(
                 "click",
                 () => {
 
-                    openExpandedNote(note);
+                    openExpandedNote(
+                        note,
+                        card
+                    );
 
                 }
             );
 
 
-            /*
-                Botones
-            */
+            /* -----------------------------------------
+               ACCIONES
+            ----------------------------------------- */
 
             card
                 .querySelectorAll(
@@ -837,19 +820,8 @@ function renderNotes() {
 
                             event.stopPropagation();
 
-
-                            const id =
-                                Number(
-                                    button
-                                        .dataset
-                                        .id
-                                );
-
-
                             const action =
-                                button
-                                    .dataset
-                                    .action;
+                                button.dataset.action;
 
 
                             if (
@@ -857,7 +829,9 @@ function renderNotes() {
                                 "favorite"
                             ) {
 
-                                toggleFavorite(id);
+                                toggleFavorite(
+                                    note.id
+                                );
 
                             }
 
@@ -867,7 +841,9 @@ function renderNotes() {
                                 "pin"
                             ) {
 
-                                togglePinned(id);
+                                togglePinned(
+                                    note.id
+                                );
 
                             }
 
@@ -877,7 +853,9 @@ function renderNotes() {
                                 "edit"
                             ) {
 
-                                editNote(id);
+                                editNote(
+                                    note.id
+                                );
 
                             }
 
@@ -887,7 +865,9 @@ function renderNotes() {
                                 "trash"
                             ) {
 
-                                moveToTrash(id);
+                                moveToTrash(
+                                    note.id
+                                );
 
                             }
 
@@ -907,46 +887,22 @@ function renderNotes() {
 }
 
 
-/* =========================================
-   EDITAR
-========================================= */
-
-function editNote(id) {
-
-    const note =
-        notes.find(
-            note =>
-                note.id === id
-        );
-
-
-    if (!note) return;
-
-
-    openNoteModal(note);
-
-}
-
-
-/* =========================================
-   FAVORITA
-========================================= */
+/* =====================================================
+   ⭐ FAVORITA
+===================================================== */
 
 function toggleFavorite(id) {
 
     const note =
         notes.find(
-            note =>
-                note.id === id
+            item =>
+                item.id === id
         );
-
 
     if (!note) return;
 
-
     note.favorite =
         !note.favorite;
-
 
     saveNotes();
 
@@ -955,25 +911,22 @@ function toggleFavorite(id) {
 }
 
 
-/* =========================================
-   FIJAR
-========================================= */
+/* =====================================================
+   📌 FIJAR
+===================================================== */
 
 function togglePinned(id) {
 
     const note =
         notes.find(
-            note =>
-                note.id === id
+            item =>
+                item.id === id
         );
-
 
     if (!note) return;
 
-
     note.pinned =
         !note.pinned;
-
 
     saveNotes();
 
@@ -982,21 +935,19 @@ function togglePinned(id) {
 }
 
 
-/* =========================================
+/* =====================================================
    PAPELERA
-========================================= */
+===================================================== */
 
 function moveToTrash(id) {
 
     const note =
         notes.find(
-            note =>
-                note.id === id
+            item =>
+                item.id === id
         );
 
-
     if (!note) return;
-
 
     note.trash =
         true;
@@ -1007,7 +958,6 @@ function moveToTrash(id) {
     note.pinned =
         false;
 
-
     saveNotes();
 
     updateNotes();
@@ -1015,9 +965,28 @@ function moveToTrash(id) {
 }
 
 
-/* =========================================
+/* =====================================================
+   EDITAR DESDE BOTÓN
+===================================================== */
+
+function editNote(id) {
+
+    const note =
+        notes.find(
+            item =>
+                item.id === id
+        );
+
+    if (!note) return;
+
+    openNoteModal(note);
+
+}
+
+
+/* =====================================================
    CONTADORES
-========================================= */
+===================================================== */
 
 function updateCounters() {
 
@@ -1027,13 +996,11 @@ function updateCounters() {
                 !note.trash
         );
 
-
     const favorites =
         normal.filter(
             note =>
                 note.favorite
         );
-
 
     const pinned =
         normal.filter(
@@ -1041,13 +1008,11 @@ function updateCounters() {
                 note.pinned
         );
 
-
     const trash =
         notes.filter(
             note =>
                 note.trash
         );
-
 
     notesCount.textContent =
         normal.length;
@@ -1064,9 +1029,9 @@ function updateCounters() {
 }
 
 
-/* =========================================
-   BUSCAR
-========================================= */
+/* =====================================================
+   BÚSQUEDA
+===================================================== */
 
 searchInput.addEventListener(
     "input",
@@ -1074,12 +1039,14 @@ searchInput.addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    NAVEGACIÓN
-========================================= */
+===================================================== */
 
 document
-    .querySelectorAll(".nav-item")
+    .querySelectorAll(
+        ".nav-item"
+    )
     .forEach(button => {
 
         button.addEventListener(
@@ -1137,40 +1104,45 @@ document
     });
 
 
-/* =========================================
-   NOTA EXPANDIDA
-========================================= */
+/* =====================================================
+   🚀 ABRIR NOTA CON ANIMACIÓN APPLE
+===================================================== */
 
-function openExpandedNote(note) {
+function openExpandedNote(
+    note,
+    card
+) {
 
     expandedNoteId =
         note.id;
 
+    sourceCard =
+        card;
+
+
+    /* -----------------------------------------
+       DATOS
+    ----------------------------------------- */
 
     expandedTitle.value =
         note.title;
 
-
     expandedContent.value =
         note.content;
-
 
     expandedDate.textContent =
         `Editada ${formatDate(
             note.updatedAt
         )}`;
 
-
     expandedTag.textContent =
         note.tag ||
         "Sin etiqueta";
-
 
     expandedFavorite.textContent =
         note.favorite
             ? "★"
             : "☆";
-
 
     expandedPin.textContent =
         note.pinned
@@ -1178,9 +1150,9 @@ function openExpandedNote(note) {
             : "⌖";
 
 
-    /*
-        Color
-    */
+    /* -----------------------------------------
+       COLOR
+    ----------------------------------------- */
 
     expandedNote.classList.remove(
         "lavender",
@@ -1190,27 +1162,30 @@ function openExpandedNote(note) {
         "rose"
     );
 
-
     expandedNote.classList.add(
         note.color
     );
 
 
+    /* -----------------------------------------
+       MOSTRAR OVERLAY
+    ----------------------------------------- */
+
     expandedOverlay
         .classList
-        .remove(
-            "hidden"
-        );
+        .remove("hidden");
 
+
+    /*
+       Importante:
+       esperamos un frame para que
+       el navegador calcule la posición.
+    */
 
     requestAnimationFrame(
         () => {
 
-            expandedOverlay
-                .classList
-                .add(
-                    "active"
-                );
+            animateCardToEditor();
 
         }
     );
@@ -1219,6 +1194,130 @@ function openExpandedNote(note) {
     document.body.style.overflow =
         "hidden";
 
+}
+
+
+/* =====================================================
+   ANIMACIÓN DESDE LA TARJETA
+===================================================== */
+
+function animateCardToEditor() {
+
+    if (!sourceCard) {
+
+        expandedOverlay
+            .classList
+            .add("active");
+
+        return;
+
+    }
+
+
+    const cardRect =
+        sourceCard.getBoundingClientRect();
+
+
+    const editorRect =
+        expandedNote.getBoundingClientRect();
+
+
+    /*
+       Calculamos cuánto tiene que
+       desplazarse el editor para
+       comenzar exactamente encima
+       de la tarjeta.
+    */
+
+    const deltaX =
+        cardRect.left -
+        editorRect.left;
+
+
+    const deltaY =
+        cardRect.top -
+        editorRect.top;
+
+
+    const scaleX =
+        cardRect.width /
+        editorRect.width;
+
+
+    const scaleY =
+        cardRect.height /
+        editorRect.height;
+
+
+    /*
+       Estado inicial.
+    */
+
+    expandedNote.style.transform =
+        `
+        translate(
+            ${deltaX}px,
+            ${deltaY}px
+        )
+        scale(
+            ${scaleX},
+            ${scaleY}
+        )
+        `;
+
+    expandedNote.style.opacity =
+        "1";
+
+
+    /*
+       Activamos overlay.
+    */
+
+    expandedOverlay
+        .classList
+        .add("active");
+
+
+    /*
+       Forzamos repaint.
+    */
+
+    expandedNote.offsetHeight;
+
+
+    /*
+       Animamos hasta pantalla completa.
+    */
+
+    requestAnimationFrame(
+        () => {
+
+            expandedNote.style.transform =
+                "";
+
+        }
+    );
+
+
+    /*
+       Después de terminar,
+       quitamos los estilos inline.
+    */
+
+    setTimeout(
+        () => {
+
+            expandedNote.style.transform =
+                "";
+
+        },
+        500
+    );
+
+
+    /*
+       Focus después de la expansión.
+    */
 
     setTimeout(
         () => {
@@ -1226,44 +1325,126 @@ function openExpandedNote(note) {
             expandedTitle.focus();
 
         },
-        400
+        500
     );
 
 }
 
 
-/* =========================================
-   CERRAR EXPANDIDA
-========================================= */
+/* =====================================================
+   CERRAR NOTA
+===================================================== */
 
 function closeExpandedNote() {
 
+    if (
+        !sourceCard
+    ) {
+
+        finishClosing();
+
+        return;
+
+    }
+
+
+    /*
+       Volvemos a calcular las posiciones.
+    */
+
+    const cardRect =
+        sourceCard.getBoundingClientRect();
+
+
+    const editorRect =
+        expandedNote.getBoundingClientRect();
+
+
+    const deltaX =
+        cardRect.left -
+        editorRect.left;
+
+
+    const deltaY =
+        cardRect.top -
+        editorRect.top;
+
+
+    const scaleX =
+        cardRect.width /
+        editorRect.width;
+
+
+    const scaleY =
+        cardRect.height /
+        editorRect.height;
+
+
+    /*
+       Cerramos hacia la tarjeta.
+    */
+
+    expandedNote.style.transform =
+        `
+        translate(
+            ${deltaX}px,
+            ${deltaY}px
+        )
+        scale(
+            ${scaleX},
+            ${scaleY}
+        )
+        `;
+
+
     expandedOverlay
         .classList
-        .remove(
-            "active"
-        );
+        .remove("active");
 
 
     setTimeout(
         () => {
 
-            expandedOverlay
-                .classList
-                .add(
-                    "hidden"
-                );
-
-
-            document.body.style.overflow =
-                "";
+            finishClosing();
 
         },
-        400
+        450
     );
 
 }
 
+
+/* =====================================================
+   FINALIZAR CIERRE
+===================================================== */
+
+function finishClosing() {
+
+    expandedOverlay
+        .classList
+        .add("hidden");
+
+    expandedNote.style.transform =
+        "";
+
+    expandedNote.style.opacity =
+        "";
+
+    sourceCard =
+        null;
+
+    expandedNoteId =
+        null;
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+/* =====================================================
+   CERRAR
+===================================================== */
 
 expandedClose.addEventListener(
     "click",
@@ -1288,52 +1469,55 @@ expandedOverlay.addEventListener(
 );
 
 
-/* =========================================
-   GUARDAR EXPANDIDA
-========================================= */
+/* =====================================================
+   GUARDAR EDITOR EXPANDIDO
+===================================================== */
 
 expandedSave.addEventListener(
     "click",
-    () => {
-
-        const note =
-            notes.find(
-                note =>
-                    note.id ===
-                    expandedNoteId
-            );
-
-
-        if (!note) return;
-
-
-        note.title =
-            expandedTitle.value.trim()
-            ||
-            "Sin título";
-
-
-        note.content =
-            expandedContent.value.trim();
-
-
-        note.updatedAt =
-            new Date().toISOString();
-
-
-        saveNotes();
-
-        updateNotes();
-
-        closeExpandedNote();
-
-    }
+    saveExpandedNote
 );
 
 
-/* =========================================
-   FAVORITA EXPANDIDA
-========================================= */
+function saveExpandedNote() {
+
+    const note =
+        notes.find(
+            item =>
+                item.id ===
+                expandedNoteId
+        );
+
+
+    if (!note) return;
+
+
+    note.title =
+        expandedTitle.value.trim()
+        ||
+        "Sin título";
+
+
+    note.content =
+        expandedContent.value.trim();
+
+
+    note.updatedAt =
+        new Date().toISOString();
+
+
+    saveNotes();
+
+    updateNotes();
+
+    closeExpandedNote();
+
+}
+
+
+/* =====================================================
+   FAVORITA DESDE EDITOR
+===================================================== */
 
 expandedFavorite.addEventListener(
     "click",
@@ -1341,8 +1525,8 @@ expandedFavorite.addEventListener(
 
         const note =
             notes.find(
-                note =>
-                    note.id ===
+                item =>
+                    item.id ===
                     expandedNoteId
             );
 
@@ -1368,9 +1552,9 @@ expandedFavorite.addEventListener(
 );
 
 
-/* =========================================
-   FIJAR EXPANDIDA
-========================================= */
+/* =====================================================
+   FIJAR DESDE EDITOR
+===================================================== */
 
 expandedPin.addEventListener(
     "click",
@@ -1378,8 +1562,8 @@ expandedPin.addEventListener(
 
         const note =
             notes.find(
-                note =>
-                    note.id ===
+                item =>
+                    item.id ===
                     expandedNoteId
             );
 
@@ -1405,16 +1589,16 @@ expandedPin.addEventListener(
 );
 
 
-/* =========================================
-   TECLADO
-========================================= */
+/* =====================================================
+   ATAJOS
+===================================================== */
 
 document.addEventListener(
     "keydown",
     event => {
 
         /*
-            Ctrl + K
+           Ctrl + K
         */
 
         if (
@@ -1431,7 +1615,7 @@ document.addEventListener(
 
 
         /*
-            Escape
+           Escape
         */
 
         if (
@@ -1469,15 +1653,14 @@ document.addEventListener(
 );
 
 
-/* =========================================
+/* =====================================================
    FECHA
-========================================= */
+===================================================== */
 
 function updateDate() {
 
     const now =
         new Date();
-
 
     const options = {
 
@@ -1491,7 +1674,6 @@ function updateDate() {
             "long"
 
     };
-
 
     const date =
         now.toLocaleDateString(
@@ -1513,7 +1695,6 @@ function formatDate(date) {
     const d =
         new Date(date);
 
-
     return d.toLocaleDateString(
         "es-ES",
         {
@@ -1528,9 +1709,9 @@ function formatDate(date) {
 }
 
 
-/* =========================================
-   SEGURIDAD
-========================================= */
+/* =====================================================
+   SEGURIDAD HTML
+===================================================== */
 
 function escapeHTML(text) {
 
@@ -1539,10 +1720,8 @@ function escapeHTML(text) {
             "div"
         );
 
-
     div.textContent =
         text;
-
 
     return div.innerHTML;
 
