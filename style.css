@@ -1670,7 +1670,6 @@ select {
 ========================================= */
 
 .expanded-overlay {
-
     position: fixed;
 
     inset: 0;
@@ -1686,7 +1685,7 @@ select {
     padding: 30px;
 
     background:
-        rgba(20,25,32,.18);
+        rgba(20, 25, 32, 0);
 
     backdrop-filter:
         blur(0);
@@ -1699,16 +1698,51 @@ select {
     pointer-events: none;
 
     transition:
-        opacity .35s ease,
-        backdrop-filter .45s ease;
+        opacity 0.45s ease,
+        background 0.45s ease,
+        backdrop-filter 0.45s ease;
+}.expanded-overlay {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 500;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    background:
+        rgba(20, 25, 32, 0);
+
+    backdrop-filter:
+        blur(0);
+
+    -webkit-backdrop-filter:
+        blur(0);
+
+    opacity: 0;
+
+    pointer-events: none;
+
+    transition:
+        opacity 0.45s ease,
+        background 0.45s ease,
+        backdrop-filter 0.45s ease;
 }
 
 
 .expanded-overlay.active {
-
     opacity: 1;
 
     pointer-events: auto;
+
+    background:
+        rgba(20, 25, 32, 0.18);
 
     backdrop-filter:
         blur(18px);
@@ -1719,54 +1753,48 @@ select {
 
 
 .expanded-note {
-
-    width:
-        min(850px,100%);
-
-    height:
-        min(700px,90vh);
+    width: min(850px, 100%);
+    height: min(700px, 90vh);
 
     border-radius: 30px;
 
     padding: 28px;
 
     display: flex;
-
     flex-direction: column;
 
     position: relative;
-
     overflow: hidden;
-
-    transform:
-        translateY(25px)
-        scale(.82);
 
     opacity: 0;
 
+    transform-origin: top left;
+
     transition:
-        transform .45s cubic-bezier(
-            .22,
+        transform 0.48s cubic-bezier(
+            0.22,
             1,
-            .36,
+            0.36,
             1
         ),
-        opacity .25s ease;
+        opacity 0.3s ease,
+        border-radius 0.48s cubic-bezier(
+            0.22,
+            1,
+            0.36,
+            1
+        );
 
     box-shadow:
         0 35px 100px
-        rgba(20,25,35,.28);
+        rgba(20, 25, 35, 0.28);
 }
 
 
-.expanded-overlay.active
-.expanded-note {
-
-    transform:
-        translateY(0)
-        scale(1);
-
+.expanded-overlay.active .expanded-note {
     opacity: 1;
+
+    border-radius: 30px;
 }
 
 
